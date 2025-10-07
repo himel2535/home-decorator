@@ -12,7 +12,26 @@ const ProductDetails = () => {
 
   if (loading) return <p>Loading...</p>;
 
-  const { image, name, price, category, description } = product;
+  const { image, name, price, category, description } = product || {};
+
+  const handleAddToWishlist = () => {
+    let updatedList = [];
+
+    const existingList = JSON.parse(localStorage.getItem("wishlist"));
+
+    if (existingList) {
+      const isDuplicate = existingList.some((p) => p.id === product.id);
+
+      if (isDuplicate) return alert("sorry vai");
+
+      updatedList = [...existingList, product];
+    } else {
+      updatedList.push(product);
+    }
+
+    localStorage.setItem("wishlist", JSON.stringify(updatedList));
+  };
+
   return (
     <div className="flex justify-center items-center">
       <div className="card bg-base-100 border shadow-sm w-full md:w-1/2 lg:w-2/5">
@@ -25,7 +44,11 @@ const ProductDetails = () => {
           <p>Price:{price}</p>
           <p>Category:{category}</p>
           <div className="card-actions justify-end">
-            <button to={`/wishlist`} className="btn btn-outline">
+            <button
+              onClick={() => handleAddToWishlist()}
+              to={`/wishlist`}
+              className="btn btn-outline"
+            >
               Add To WishList
             </button>
           </div>
