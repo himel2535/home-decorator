@@ -20,6 +20,18 @@ const WishList = () => {
     }
   })();
 
+  const handleRemoveToWishlist = id => {
+
+    const existingList = JSON.parse(localStorage.getItem("wishlist"));
+
+    let updatedList=existingList.filter(p=>p.id !== id)
+
+    setWishlist(updatedList)
+
+    localStorage.setItem("wishlist", JSON.stringify(updatedList));
+
+  };
+
   return (
     <div>
       <div className="flex justify-between items-center mb-5">
@@ -62,7 +74,7 @@ const WishList = () => {
 
               <div className="flex items-center gap-4">
                 <h4 className="text-xl font-semibold">Price: {p.price}</h4>
-                <button className="btn btn-primary">Remove</button>
+                <button onClick={()=>handleRemoveToWishlist(p.id)} className="btn btn-primary">Remove</button>
               </div>
             </div>
           </div>
