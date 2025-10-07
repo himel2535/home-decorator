@@ -3,10 +3,22 @@ import React, { useEffect, useState } from "react";
 const WishList = () => {
   const [wishlist, setWishlist] = useState([]);
 
+  const [sortOrder, setSortOrder] = useState("none");
+
   useEffect(() => {
     const savedList = JSON.parse(localStorage.getItem("wishlist"));
     if (savedList) setWishlist(savedList);
   }, []);
+
+  const sortedItem = (() => {
+    if (sortOrder === "price-asc") {
+      return [...wishlist].sort((a, b) => a.price - b.price);
+    } else if (sortOrder === "price-dsc") {
+      return [...wishlist].sort((a, b) => b.price - a.price);
+    } else {
+      return wishlist;
+    }
+  })();
 
   return (
     <div>
@@ -17,12 +29,22 @@ const WishList = () => {
             ({wishlist.length}) founds
           </span>
         </h1>
-        <button className="btn btn-outline">Sort By</button>
+        <label className="form-control w-full max-w-xs">
+          <select
+            className="select select-bordered"
+            value={sortOrder}
+            onChange={(e) => setSortOrder(e.target.value)}
+          >
+            <option value="none">Sort By Price</option>
+            <option value="price-asc">Low-&gt;High</option>
+            <option value="price-dsc">High-&gt;Low</option>
+          </select>
+        </label>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
 
       <div className="space-y-3">
-        {wishlist.map((p) => (
+        {sortedItem.map((p) => (
           <div className="card card-side bg-base-100 shadow-sm items-center">
             <figure>
               <img
